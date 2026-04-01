@@ -18,6 +18,8 @@ models/*.onnx
 *.a
 *.so
 *.dylib
+*.dSYM/
+src/main
 
 # OS
 Thumbs.db

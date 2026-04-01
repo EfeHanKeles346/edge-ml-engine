@@ -6,14 +6,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Main library
-# add_library(edge_ml
-#     src/tensor/tensor.cpp
-# )
-# target_include_directories(edge_ml PUBLIC include/)
+add_library(edge_ml
+    src/tensor/tensor.cpp
+)
+target_include_directories(edge_ml PUBLIC include/)
 
 # Main executable
 add_executable(edge_ml_engine src/main.cpp)
-# target_link_libraries(edge_ml_engine PRIVATE edge_ml)
+target_link_libraries(edge_ml_engine PRIVATE edge_ml)
 
 # Testing
 include(FetchContent)
@@ -25,7 +25,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 enable_testing()
 
-# add_executable(tensor_test tests/tensor_test.cpp)
-# target_link_libraries(tensor_test PRIVATE edge_ml GTest::gtest_main)
-# include(GoogleTest)
-# gtest_discover_tests(tensor_test)
+add_executable(tensor_test tests/tensor_test.cpp)
+target_link_libraries(tensor_test PRIVATE edge_ml GTest::gtest_main)
+include(GoogleTest)
+gtest_discover_tests(tensor_test)
