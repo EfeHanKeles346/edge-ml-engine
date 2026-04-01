@@ -247,3 +247,84 @@ TEST(TensorTest, ElementWiseOnTransposed) {
     EXPECT_FLOAT_EQ(c.at({0, 1}), 44.0f);
     EXPECT_FLOAT_EQ(c.at({2, 1}), 66.0f);
 }
+
+// ============================================================
+// Matmul (Week 3)
+// ============================================================
+
+TEST(TensorTest, MatmulBasic) {
+    // [1, 2]   [5, 6]   [1*5+2*7, 1*6+2*8]   [19, 22]
+    // [3, 4] x [7, 8] = [3*5+4*7, 3*6+4*8] = [43, 50]
+    Tensor a({2, 2}, {1, 2, 3, 4});
+    Tensor b({2, 2}, {5, 6, 7, 8});
+    Tensor c = a.matmul(b);
+    EXPECT_EQ(c.shape()[0], 2);
+    EXPECT_EQ(c.shape()[1], 2);
+    EXPECT_FLOAT_EQ(c.at({0, 0}), 19.0f);
+    EXPECT_FLOAT_EQ(c.at({0, 1}), 22.0f);
+    EXPECT_FLOAT_EQ(c.at({1, 0}), 43.0f);
+    EXPECT_FLOAT_EQ(c.at({1, 1}), 50.0f);
+}
+
+TEST(TensorTest, MatmulRectangular) {
+    // [2, 3] x [3, 2] = [2, 2]
+    Tensor a({2, 3}, {1, 2, 3, 4, 5, 6});
+    Tensor b({3, 2}, {7, 8, 9, 10, 11, 12});
+    Tensor c = a.matmul(b);
+    EXPECT_EQ(c.shape()[0], 2);
+    EXPECT_EQ(c.shape()[1], 2);
+    // Row 0: 1*7+2*9+3*11=58, 1*8+2*10+3*12=64
+    // Row 1: 4*7+5*9+6*11=139, 4*8+5*10+6*12=154
+    EXPECT_FLOAT_EQ(c.at({0, 0}), 58.0f);
+    EXPECT_FLOAT_EQ(c.at({0, 1}), 64.0f);
+    EXPECT_FLOAT_EQ(c.at({1, 0}), 139.0f);
+    EXPECT_FLOAT_EQ(c.at({1, 1}), 154.0f);
+}
+
+TEST(TensorTest, MatmulShapeMismatch) {
+    Tensor a({2, 3});
+    Tensor b({2, 3});
+    EXPECT_THROW(a.matmul(b), std::invalid_argument);
+}
+
+TEST(TensorTest, MatmulNot2D) {
+    Tensor a({2, 3, 4});
+    Tensor b({4, 2});
+    EXPECT_THROW(a.matmul(b), std::invalid_argument);
+}
+
+TEST(TensorTest, MatmulIdentity) {
+    // A x I = A
+    Tensor a({2, 2}, {3, 7, 1, 5});
+    Tensor identity({2, 2}, {1, 0, 0, 1});
+    Tensor c = a.matmul(identity);
+    EXPECT_FLOAT_EQ(c.at({0, 0}), 3.0f);
+    EXPECT_FLOAT_EQ(c.at({0, 1}), 7.0f);
+    EXPECT_FLOAT_EQ(c.at({1, 0}), 1.0f);
+    EXPECT_FLOAT_EQ(c.at({1, 1}), 5.0f);
+}
+
+TEST(TensorTest, MatmulTiledSameResult) {
+    Tensor a({4, 3}, {1,2,3, 4,5,6, 7,8,9, 10,11,12});
+    Tensor b({3, 4}, {1,2,3,4, 5,6,7,8, 9,10,11,12});
+    Tensor naive = a.matmul(b);
+    Tensor tiled = a.matmul_tiled(b, 2);
+    EXPECT_EQ(naive.shape(), tiled.shape());
+    for (int i = 0; i < naive.size(); i++) {
+        EXPECT_FLOAT_EQ(naive[i], tiled[i]);
+    }
+}
+
+TEST(TensorTest, MatmulWithTransposed) {
+    // A x A^T
+    Tensor a({2, 3}, {1, 2, 3, 4, 5, 6});
+    Tensor at = a.transpose(0, 1); // [3, 2]
+    Tensor c = a.matmul(at);
+    // [1,2,3] . [1,4] = 1+4+9=14,  [1,2,3] . [2,5] = ...
+    EXPECT_EQ(c.shape()[0], 2);
+    EXPECT_EQ(c.shape()[1], 2);
+    EXPECT_FLOAT_EQ(c.at({0, 0}), 14.0f);  // 1*1+2*2+3*3
+    EXPECT_FLOAT_EQ(c.at({0, 1}), 32.0f);  // 1*4+2*5+3*6
+    EXPECT_FLOAT_EQ(c.at({1, 0}), 32.0f);  // 4*1+5*2+6*3
+    EXPECT_FLOAT_EQ(c.at({1, 1}), 77.0f);  // 4*4+5*5+6*6
+}

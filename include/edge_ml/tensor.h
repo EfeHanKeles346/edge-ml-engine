@@ -49,6 +49,10 @@ public:
     Tensor subtract(const Tensor& other) const;
     Tensor multiply(const Tensor& other) const;
 
+    // Matrix multiplication
+    Tensor matmul(const Tensor& other) const;
+    Tensor matmul_tiled(const Tensor& other, int tile_size = 32) const;
+
     // Utilities
     void fill(float value);
     void print() const;

@@ -207,6 +207,87 @@ Tensor Tensor::multiply(const Tensor& other) const {
 }
 
 // ============================================================
+// Matrix multiplication
+// ============================================================
+
+Tensor Tensor::matmul(const Tensor& other) const {
+    if (ndim() != 2 || other.ndim() != 2) {
+        throw std::invalid_argument("matmul requires 2D tensors");
+    }
+    int M = shape_[0];   // rows of A
+    int K = shape_[1];   // cols of A = rows of B
+    int N = other.shape_[1]; // cols of B
+
+    if (K != other.shape_[0]) {
+        throw std::invalid_argument("matmul shape mismatch: A cols != B rows");
+    }
+
+    // Make contiguous copies if needed
+    Tensor a = is_contiguous() ? *this : contiguous();
+    Tensor b = other.is_contiguous() ? other : other.contiguous();
+    const float* A = a.data();
+    const float* B = b.data();
+
+    Tensor result({M, N});
+    float* C = result.data();
+
+    // Naive: 3 nested loops (i-j-k)
+    for (int i = 0; i < M; i++) {
+        for (int j = 0; j < N; j++) {
+            float sum = 0.0f;
+            for (int k = 0; k < K; k++) {
+                sum += A[i * K + k] * B[k * N + j];
+            }
+            C[i * N + j] = sum;
+        }
+    }
+    return result;
+}
+
+Tensor Tensor::matmul_tiled(const Tensor& other, int tile_size) const {
+    if (ndim() != 2 || other.ndim() != 2) {
+        throw std::invalid_argument("matmul_tiled requires 2D tensors");
+    }
+    int M = shape_[0];
+    int K = shape_[1];
+    int N = other.shape_[1];
+
+    if (K != other.shape_[0]) {
+        throw std::invalid_argument("matmul_tiled shape mismatch: A cols != B rows");
+    }
+
+    Tensor a = is_contiguous() ? *this : contiguous();
+    Tensor b = other.is_contiguous() ? other : other.contiguous();
+    const float* A = a.data();
+    const float* B = b.data();
+
+    Tensor result({M, N});
+    result.fill(0.0f);
+    float* C = result.data();
+
+    // Tiled: i-j-k with blocks for better cache usage
+    for (int i0 = 0; i0 < M; i0 += tile_size) {
+        int imax = std::min(i0 + tile_size, M);
+        for (int k0 = 0; k0 < K; k0 += tile_size) {
+            int kmax = std::min(k0 + tile_size, K);
+            for (int j0 = 0; j0 < N; j0 += tile_size) {
+                int jmax = std::min(j0 + tile_size, N);
+                // Multiply tile
+                for (int i = i0; i < imax; i++) {
+                    for (int k = k0; k < kmax; k++) {
+                        float a_val = A[i * K + k];
+                        for (int j = j0; j < jmax; j++) {
+                            C[i * N + j] += a_val * B[k * N + j];
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return result;
+}
+
+// ============================================================
 // Utilities
 // ============================================================
 

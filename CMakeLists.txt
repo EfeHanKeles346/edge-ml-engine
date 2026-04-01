@@ -29,3 +29,8 @@ add_executable(tensor_test tests/tensor_test.cpp)
 target_link_libraries(tensor_test PRIVATE edge_ml GTest::gtest_main)
 include(GoogleTest)
 gtest_discover_tests(tensor_test)
+
+# Benchmarks
+add_executable(matmul_bench benchmarks/matmul_bench.cpp)
+target_link_libraries(matmul_bench PRIVATE edge_ml)
+target_compile_options(matmul_bench PRIVATE -O2)
