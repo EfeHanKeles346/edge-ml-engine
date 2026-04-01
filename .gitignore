@@ -1,0 +1,23 @@
+# Build
+build/
+cmake-build-*/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Models (large files)
+models/*.onnx
+!models/.gitkeep
+
+# Compiled
+*.o
+*.a
+*.so
+*.dylib
+
+# OS
+Thumbs.db
