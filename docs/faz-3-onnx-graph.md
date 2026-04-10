@@ -4,23 +4,23 @@
 Read ONNX files, build computation graph, sort with topological sort, and execute.
 
 ## Week 1: ONNX Parser
-- [ ] Get onnx.proto3 file (from ONNX GitHub)
-- [ ] Generate C++ code with protoc
-- [ ] Open and parse .onnx file
-- [ ] Print node list (op_type, inputs, outputs)
-- [ ] Load weights (initializers) into Tensors
+- [x] Get onnx.proto3 file (from ONNX GitHub)
+- [x] Generate C++ code with protoc
+- [x] Open and parse .onnx file
+- [x] Print node list (op_type, inputs, outputs)
+- [x] Load weights (initializers) into Tensors
 
 ## Week 2: Graph Builder
-- [ ] Graph class: store nodes and edges
-- [ ] Node connections: which output feeds into which node's input?
-- [ ] Determine execution order with topological sort
-- [ ] Load weight tensors into memory
+- [x] Graph class: store nodes and edges
+- [x] Node connections: which output feeds into which node's input?
+- [x] Determine execution order with topological sort
+- [x] Load weight tensors into memory
 
 ## Week 3: Executor
-- [ ] Execute sorted nodes sequentially
-- [ ] For each node: find operator from registry, get input tensors, execute, store output tensor
-- [ ] Test with simple model (small CNN or MobileNet)
-- [ ] Validate results against PyTorch
+- [x] Execute sorted nodes sequentially
+- [x] For each node: find operator from registry, get input tensors, execute, store output tensor
+- [x] Test with simple model (small CNN)
+- [x] Validate results against PyTorch/ONNXRuntime
 
 ## Notes
 
