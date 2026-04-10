@@ -5,14 +5,14 @@ Set up CMake project, integrate gtest and protobuf, compile and run a "hello wor
 
 ## Tasks
 
-- [ ] Create CMake project (CMakeLists.txt)
-- [ ] Directory structure: src/, include/, tests/, examples/
-- [ ] Integrate Google Test (gtest) via FetchContent
-- [ ] Add protobuf library via FetchContent
-- [ ] src/main.cpp — simple main that prints "Engine initialized"
-- [ ] Add first test file under tests/
-- [ ] Build and run: cmake .. && make && ./edge_ml_engine
-- [ ] Add GitHub Actions CI workflow
+- [x] Create CMake project (CMakeLists.txt)
+- [x] Directory structure: src/, include/, tests/, examples/
+- [x] Integrate Google Test (gtest) via FetchContent
+- [x] Add protobuf library via FetchContent
+- [x] src/main.cpp — simple main that prints "Engine initialized"
+- [x] Add first test file under tests/
+- [x] Build and run: cmake .. && make && ./edge_ml_engine
+- [x] Add GitHub Actions CI workflow
 
 ## Notes
 
