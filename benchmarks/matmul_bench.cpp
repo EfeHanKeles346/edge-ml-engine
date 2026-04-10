@@ -1,5 +1,6 @@
 #include "edge_ml/tensor.h"
 #include <chrono>
+#include <functional>
 #include <iostream>
 #include <random>
 
