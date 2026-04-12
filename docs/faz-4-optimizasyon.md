@@ -4,25 +4,25 @@
 Speed up the engine: SIMD, operator fusion, quantization, benchmarking.
 
 ## SIMD
-- [ ] Accelerate element-wise ops with SIMD (ARM NEON / SSE)
-- [ ] Optimize matmul with SIMD
-- [ ] Benchmark: SIMD vs naive comparison
+- [x] Accelerate element-wise ops with SIMD (ARM NEON / SSE)
+- [x] Optimize matmul with SIMD
+- [x] Benchmark: SIMD vs naive comparison
 
 ## Operator Fusion
-- [ ] Conv + BatchNorm fusion (merge weights)
-- [ ] Conv + ReLU fusion
-- [ ] Graph optimizer pass: find fusible nodes and merge them
+- [x] Conv + BatchNorm fusion (merge weights)
+- [x] Conv + ReLU fusion
+- [x] Graph optimizer pass: find fusible nodes and merge them
 
 ## Quantization
-- [ ] FP32 -> FP16 support
-- [ ] FP32 -> INT8 quantization (scale + zero_point)
-- [ ] Quantized operators
-- [ ] Accuracy vs speed comparison
+- [x] FP32 -> FP16 support
+- [x] FP32 -> INT8 quantization (scale + zero_point)
+- [x] Quantized operators
+- [x] Accuracy vs speed comparison
 
 ## Benchmark
-- [ ] Inference time measurement (ms)
-- [ ] Memory usage
-- [ ] Before vs after optimization comparison table
+- [x] Inference time measurement (ms)
+- [x] Memory usage
+- [x] Before vs after optimization comparison table
 
 ## Notes
 

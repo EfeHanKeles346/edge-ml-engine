@@ -58,6 +58,9 @@ add_library(edge_ml
     src/parser/onnx_parser.cpp
     src/graph/graph.cpp
     src/graph/executor.cpp
+    src/optimizer/simd_ops.cpp
+    src/optimizer/fusion.cpp
+    src/optimizer/quantization.cpp
     ${ONNX_PROTO_GEN_DIR}/onnx.proto3.pb.cc
 )
 add_dependencies(edge_ml onnx_proto_gen)
@@ -85,7 +88,15 @@ target_link_libraries(graph_test PRIVATE edge_ml GTest::gtest_main)
 target_compile_definitions(graph_test PRIVATE TEST_DATA_DIR="${CMAKE_SOURCE_DIR}/tests")
 gtest_discover_tests(graph_test)
 
+add_executable(optimization_test tests/optimization_test.cpp)
+target_link_libraries(optimization_test PRIVATE edge_ml GTest::gtest_main)
+gtest_discover_tests(optimization_test)
+
 # Benchmarks
 add_executable(matmul_bench benchmarks/matmul_bench.cpp)
 target_link_libraries(matmul_bench PRIVATE edge_ml)
 target_compile_options(matmul_bench PRIVATE -O2)
+
+add_executable(optimization_bench benchmarks/optimization_bench.cpp)
+target_link_libraries(optimization_bench PRIVATE edge_ml)
+target_compile_options(optimization_bench PRIVATE -O2)
